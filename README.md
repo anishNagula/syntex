@@ -9,7 +9,7 @@ It generates and processes real-time audio through small composable DSP modules 
 
 Instead of using graphical patch editors or piano-roll interfaces, Syntex focuses on building and controlling audio pipelines through code and text-based configuration.
 
-<hr style="height:1px;border:none;color:#333;background-color:#333;" />
+---
 
 #### The project currently implements:
 
@@ -22,8 +22,7 @@ Instead of using graphical patch editors or piano-roll interfaces, Syntex focuse
 
 ```Oscillator -> Gain -> Speaker```
 
-<hr style="height:1px;border:none;color:#333;background-color:#333;" />
-
+---
 
 #### The audio backend is responsible for:
 
@@ -42,7 +41,56 @@ Instead of using graphical patch editors or piano-roll interfaces, Syntex focuse
 - Gain
     - Scales incoming sample amplitudes before output.
  
-<hr style="height:1px;border:none;color:#333;background-color:#333;" />
+---
+
+#### DSP traits currently implemented:
+- `AudioSource`
+    - Shared interface for modules capable of generating audio samples.
+- `AudioProcessor`
+    - Shared interface for modules that process incoming audio samples.
+
+---
+
+#### Audio Engine
+
+Syntex currently uses a dedicated `AudioEngine` layer to separate DSP execution from the audio backend.
+
+The engine is responsible for:
+
+- owning DSP modules
+- executing the processing chain
+- generating final output samples
+
+This keeps the audio backend independent from DSP implementation details.
+
+#### Current execution model:
+```
+main.rs
+    ↓
+AudioEngine
+    ↓
+Oscillator -> Gain
+    ↓
+Output Sample
+```
+
+---
+
+#### Realtime DSP Notes
+
+Audio generation in Syntex is stateful.
+
+Modules like oscillators maintain internal state across audio callbacks to ensure continuous waveform generation without discontinuities or audible artifacts.
+
+The current sine oscillator uses phase accumulation:
+
+```phase -> sine -> sample```
+
+where phase advances continuously based on:
+- frequency
+- sample rate
+
+---
 
 
 ### Current project structure:
@@ -57,3 +105,4 @@ src/
 ```
 
 The project is currently experimental and heavily focused on learning and architecture exploration.
+

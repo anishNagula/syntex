@@ -19,8 +19,8 @@ fn main() {
 
     let sample_rate = config.sample_rate() as f32;
 
-    let frequency = 440.0;
-    let gain_amount = 2.0;
+    let mut frequency = 440.0;
+    let gain_amount = 0.2;
 
     let mut engine = AudioEngine::new(sample_rate, frequency, gain_amount);
 
@@ -33,6 +33,8 @@ fn main() {
                 move |data: &mut [f32], _| {
                     for sample in data.iter_mut() {
                         *sample = engine.next_sample();
+                        frequency += 0.01;
+                        engine.set_frequency(frequency);
                     }
                 },
                 err_fn,

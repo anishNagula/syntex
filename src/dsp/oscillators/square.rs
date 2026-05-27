@@ -32,5 +32,9 @@ impl AudioSource for SquareOscillator {
 
         sample
     }
+
+    fn set_frequency(&mut self, frequency: f32) {
+        self.frequency = frequency;
+    }
 }
 

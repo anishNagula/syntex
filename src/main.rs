@@ -31,10 +31,10 @@ fn main() {
             .build_output_stream(
                 &config.into(),
                 move |data: &mut [f32], _| {
+                    frequency += 0.1;
+                    engine.set_frequency(frequency);
                     for sample in data.iter_mut() {
                         *sample = engine.next_sample();
-                        frequency += 0.01;
-                        engine.set_frequency(frequency);
                     }
                 },
                 err_fn,

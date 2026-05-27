@@ -1,15 +1,16 @@
-use crate::dsp::oscillator::SineOscillator;
+use crate::dsp::oscillators::sine::SineOscillator;
+use crate::dsp::oscillators::square::SquareOscillator;
 use crate::dsp::gain::Gain;
 use crate::dsp::node::{AudioSource, AudioProcessor};
 
 pub struct AudioEngine {
-    osc: SineOscillator,
+    osc: SquareOscillator,
     gain: Gain,
 }
 
 impl AudioEngine {
     pub fn new(sample_rate: f32, frequency: f32, gain_amount: f32) -> Self {
-        let osc = SineOscillator::new(sample_rate, frequency);
+        let osc = SquareOscillator::new(sample_rate, frequency);
 
         let gain = Gain::new(gain_amount);
 

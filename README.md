@@ -1,3 +1,8 @@
+<div align="center">
+  <img width="600" height="314" alt="Syntex(1) " src="https://github.com/user-attachments/assets/ea0a12e3-bf5e-4d5d-a0ba-2b7f25774ad6" />
+</div>
+<br>
+
 Syntex is a modular audio engine written in Rust.
 
 It generates and processes real-time audio through small composable DSP modules like oscillators, gain stages, filters, and effects connected together in signal chains.

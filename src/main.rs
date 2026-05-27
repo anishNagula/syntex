@@ -2,9 +2,10 @@ use std::time::Duration;
 
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 
-mod dsp; 
+mod dsp;
 use dsp::oscillator::SineOscillator;
 use dsp::gain::Gain;
+use dsp::node::{AudioSource, AudioProcessor};
 
 fn main() {
     let host = cpal::default_host();
@@ -22,7 +23,7 @@ fn main() {
 
     let mut osc = SineOscillator::new(sample_rate, frequency);
 
-    let mut gain = Gain::new(gain_amount);
+    let gain = Gain::new(gain_amount);
 
     let err_fn = |err| eprintln!("stream error: {}", err);
 

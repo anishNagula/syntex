@@ -1,5 +1,7 @@
 use std::f32::consts::PI;
 
+use crate::dsp::node::AudioSource;
+
 pub struct SineOscillator {
     sample_rate: f32,
     frequency: f32,
@@ -14,12 +16,17 @@ impl SineOscillator {
             phase: 0.0,
         }
     }
+}
 
-    pub fn next_sample(&mut self) -> f32 {
+impl AudioSource for SineOscillator {
+    fn next_sample(&mut self) -> f32 {
         let sample = self.phase.sin();
 
-        let phase_increment = (2.0 * PI * self.frequency) / self.sample_rate;
-        self.phase = (self.phase + phase_increment) % (2.0 * PI);
+        let phase_increment =
+            (2.0 * PI * self.frequency) / self.sample_rate;
+
+        self.phase =
+            (self.phase + phase_increment) % (2.0 * PI);
 
         sample
     }

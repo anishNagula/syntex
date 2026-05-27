@@ -1,3 +1,7 @@
-pub trait AudioNode {
-    fn sample_next(&mut self) ->f32;
+pub trait AudioSource {
+    fn next_sample(&mut self) ->f32;
+}
+
+pub trait AudioProcessor {
+    fn process(&self, input: f32) -> f32;
 }

@@ -4,6 +4,7 @@ use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 
 mod dsp;
 mod audio;
+mod patch;
 
 use audio::engine::AudioEngine;
 

@@ -1,6 +1,7 @@
 use crate::dsp::generators::lfo::LFOOscillator;
 use crate::dsp::generators::sine::SineOscillator;
 use crate::dsp::generators::square::SquareOscillator;
+use crate::dsp::processors::lowpass::LowPassFilterNode;
 
 use crate::dsp::node::AudioNode;
 
@@ -40,12 +41,20 @@ impl AudioEngine {
                 ),
             );
 
+        let filtered_square: Box<dyn AudioNode> =
+            Box::new(
+                LowPassFilterNode::new(
+                    square,
+                    0.05,
+                ),
+            );
+
         // Mixer node
         let mixer: Box<dyn AudioNode> =
             Box::new(
                 MixerNode::new(vec![
                     sine,
-                    square,
+                    filtered_square,
                 ]),
             );
 

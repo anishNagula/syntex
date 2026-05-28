@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use crate::dsp::node::AudioSource;
+use crate::dsp::node::AudioNode;
 
 pub struct SquareOscillator {
     sample_rate: f32,
@@ -18,7 +18,7 @@ impl SquareOscillator {
     }
 }
 
-impl AudioSource for SquareOscillator {
+impl AudioNode for SquareOscillator {
     fn next_sample(&mut self) -> f32 {
         let sample = if self.phase < PI {
             1.0

@@ -1,3 +1,5 @@
-pub mod gain;
 pub mod node;
-pub mod oscillators;
+
+pub mod generators;
+pub mod processors;
+pub mod routing;

@@ -1,0 +1,26 @@
+{
+  "type": "Gain",
+  "gain": 0.2,
+
+  "input": {
+    "type": "Mixer",
+
+    "inputs": [
+
+      {
+        "type": "Sine",
+        "frequency": 440.0
+      },
+
+      {
+        "type": "LowPass",
+        "alpha": 0.05,
+
+        "input": {
+          "type": "Square",
+          "frequency": 440.0
+        }
+      }
+    ]
+  }
+}

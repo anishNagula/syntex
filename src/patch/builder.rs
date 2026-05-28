@@ -8,61 +8,102 @@ use crate::dsp::processors::lowpass::LowPassFilterNode;
 
 use crate::dsp::routing::mixer::MixerNode;
 
+use crate::patch::definition::PatchNode;
+
 pub struct PatchBuilder;
 
 impl PatchBuilder {
 
-    pub fn basic_patch(
+    pub fn build(
+        node: PatchNode,
         sample_rate: f32,
-        frequency: f32,
-        gain_amount: f32,
     ) -> Box<dyn AudioNode> {
 
-        // Sine oscillator
-        let sine: Box<dyn AudioNode> =
-            Box::new(
-                SineOscillator::new(
-                    sample_rate,
-                    frequency,
-                ),
-            );
+        match node {
 
-        // Square oscillator
-        let square: Box<dyn AudioNode> =
-            Box::new(
-                SquareOscillator::new(
-                    sample_rate,
-                    frequency,
-                ),
-            );
+            PatchNode::Sine {
+                frequency,
+            } => {
 
-        // Filter square oscillator
-        let filtered_square: Box<dyn AudioNode> =
-            Box::new(
-                LowPassFilterNode::new(
-                    square,
-                    0.05,
-                ),
-            );
+                Box::new(
+                    SineOscillator::new(
+                        sample_rate,
+                        frequency,
+                    ),
+                )
+            }
 
-        // Mix sine + filtered square
-        let mixer: Box<dyn AudioNode> =
-            Box::new(
-                MixerNode::new(vec![
-                    sine,
-                    filtered_square,
-                ]),
-            );
+            PatchNode::Square {
+                frequency,
+            } => {
 
-        // Final gain stage
-        let gain: Box<dyn AudioNode> =
-            Box::new(
-                GainNode::new(
-                    mixer,
-                    gain_amount,
-                ),
-            );
+                Box::new(
+                    SquareOscillator::new(
+                        sample_rate,
+                        frequency,
+                    ),
+                )
+            }
 
-        gain
+            PatchNode::LowPass {
+                input,
+                alpha,
+            } => {
+
+                let input_node =
+                    Self::build(
+                        *input,
+                        sample_rate,
+                    );
+
+                Box::new(
+                    LowPassFilterNode::new(
+                        input_node,
+                        alpha,
+                    ),
+                )
+            }
+
+            PatchNode::Mixer {
+                inputs,
+            } => {
+
+                let built_inputs =
+                    inputs
+                        .into_iter()
+                        .map(|input| {
+                            Self::build(
+                                input,
+                                sample_rate,
+                            )
+                        })
+                        .collect();
+
+                Box::new(
+                    MixerNode::new(
+                        built_inputs,
+                    ),
+                )
+            }
+
+            PatchNode::Gain {
+                input,
+                gain,
+            } => {
+
+                let input_node =
+                    Self::build(
+                        *input,
+                        sample_rate,
+                    );
+
+                Box::new(
+                    GainNode::new(
+                        input_node,
+                        gain,
+                    ),
+                )
+            }
+        }
     }
 }
